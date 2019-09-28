@@ -6,41 +6,49 @@ import com.structurizr.model.Model;
 import com.structurizr.model.Person;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.model.Tags;
+import com.structurizr.model.Enterprise;
 import com.structurizr.view.*;
 
-/**
- * This is a simple example of how to get started with Structurizr for Java.
- */
 public class Structurizr {
 
     public static void main(String[] args) throws Exception {
-        // a Structurizr workspace is the wrapper for a software architecture model, views and documentation
-        Workspace workspace = new Workspace("Getting Started", "This is a model of my software system.");
-        Model model = workspace.getModel();
-
-        // add some elements to your software architecture model
-        Person user = model.addPerson("User", "A user of my software system.");
-        SoftwareSystem softwareSystem = model.addSoftwareSystem("Software System", "My software system.");
-        user.uses(softwareSystem, "Uses");
-
-        // define some views (the diagrams you would like to see)
+        // Workspace
+        Workspace workspace = new Workspace("Private apps", "This is a model of my private systems built from many apps");
         ViewSet views = workspace.getViews();
-        SystemContextView contextView = views.createSystemContextView(softwareSystem, "SystemContext", "An example of a System Context diagram.");
+        Model model = workspace.getModel();
+        model.setEnterprise(new Enterprise("Sebastian Czech"));
+
+        // C1
+        Person user = model.addPerson("User", "Me, a user of my software system.");
+        SoftwareSystem notesApp = model.addSoftwareSystem("Notes", "Notes app.");
+        user.uses(notesApp, "Uses");
+        SoftwareSystem multimediaApp = model.addSoftwareSystem("Multimedia", "Multimedia app.");
+        user.uses(multimediaApp, "Uses");
+        SoftwareSystem apiRest = model.addSoftwareSystem("API", "REST API.");
+        notesApp.uses(apiRest, "Gets / Sends");
+        multimediaApp.uses(apiRest, "Gets / Sends");
+        SoftwareSystem googleCalendar = model.addSoftwareSystem("Calendar", "Google Calendar.");
+        notesApp.uses(googleCalendar, "Gets / Sends");
+        googleCalendar.delivers(user, "Updated calendar");
+
+        // Views generation
+        SystemContextView contextView = views.createSystemContextView(notesApp, "SystemContext", "System Context diagram.");
         contextView.setPaperSize(PaperSize.A5_Landscape);
         contextView.addAllSoftwareSystems();
         contextView.addAllPeople();
 
-        // add some documentation
+        // Documentation
         StructurizrDocumentationTemplate template = new StructurizrDocumentationTemplate(workspace);
-        template.addContextSection(softwareSystem, Format.Markdown,
-                "Here is some context about the software system...\n" +
-                        "\n" +
-                        "![](embed:SystemContext)");
+        template.addContextSection(notesApp, Format.Markdown,
+                "# Documentation\n\n" +
+                "## Notes\n\n" + 
+                "## Multimedia\n\n" + 
+                "## API\n\n");
 
-        // add some styling
+        // Styles
         Styles styles = views.getConfiguration().getStyles();
         styles.addElementStyle(Tags.SOFTWARE_SYSTEM).background("#1168bd").color("#ffffff");
-        styles.addElementStyle(Tags.PERSON).background("#08427b").color("#ffffff").shape(Shape.Person);
+        styles.addElementStyle(Tags.PERSON).background("#ff6600").color("#ffffff").shape(Shape.Person);
 
         uploadWorkspaceToStructurizr(workspace);
     }
