@@ -5,3 +5,9 @@
 
 build
 src/main/java/Credentials.java
+structurizr-*.json
+
+.classpath
+.project
+.settings/
+bin/

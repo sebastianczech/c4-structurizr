@@ -13,10 +13,6 @@ import com.structurizr.view.*;
  */
 public class Structurizr {
 
-    private static final long WORKSPACE_ID = 1234;
-    private static final String API_KEY = "key";
-    private static final String API_SECRET = "secret";
-
     public static void main(String[] args) throws Exception {
         // a Structurizr workspace is the wrapper for a software architecture model, views and documentation
         Workspace workspace = new Workspace("Getting Started", "This is a model of my software system.");
@@ -50,8 +46,8 @@ public class Structurizr {
     }
 
     private static void uploadWorkspaceToStructurizr(Workspace workspace) throws Exception {
-        StructurizrClient structurizrClient = new StructurizrClient(API_KEY, API_SECRET);
-        structurizrClient.putWorkspace(WORKSPACE_ID, workspace);
+        StructurizrClient structurizrClient = new StructurizrClient(Credentials.API_KEY, Credentials.API_SECRET);
+        structurizrClient.putWorkspace(Credentials.WORKSPACE_ID, workspace);
     }
 
 }
