@@ -35,9 +35,15 @@ public class Structurizr {
 
         // Views generation
         SystemContextView contextView = views.createSystemContextView(notesApp, "SystemContext", "System Context diagram.");
-        contextView.setPaperSize(PaperSize.A5_Landscape);
+        contextView.setPaperSize(PaperSize.A6_Landscape);
+        contextView.addNearestNeighbours(apiRest);
         contextView.addAllSoftwareSystems();
         contextView.addAllPeople();
+        contextView.addAnimation(notesApp);
+        contextView.addAnimation(multimediaApp);
+        contextView.addAnimation(apiRest);
+        contextView.addAnimation(googleCalendar);
+        contextView.addAnimation(user);
 
         // C2
         Container webApp = notesApp.addContainer( "Web app", "Main UI for notes app", "Python");
@@ -45,12 +51,27 @@ public class Structurizr {
         user.uses(webApp, "Uses", ""); 
         webApp.uses(database, "Read / write", "PEP"); 
 
+        // Views generation
+        ContainerView containerView = views.createContainerView(notesApp, "Containers", "System containers diagram.");
+        containerView.setPaperSize(PaperSize.A6_Landscape);
+        containerView.addAllContainers();
+        containerView.add(user);
+        containerView.addAnimation(webApp);
+        containerView.addAnimation(database);
+
         // C3
-        Component authController = webApp.addComponent( "Authentication","Allow to authentication access to web app", "Google OAuth client");
-        Component calendarController = webApp.addComponent("Calendar","Insert event into calendar for reminder", "Google Calendar API client");
-        Component financeWizardController = webApp.addComponent( "Wizard for financial operations","Allow in one step to update multiples financial objects e.g. for shoping operation","Django"); 
-        financeWizardController.uses(database, "Read / write", "JDBC");
+        Component authComponent = webApp.addComponent( "Authentication","Allow to authentication access to web app", "Google OAuth client");
+        Component calendarComponent = webApp.addComponent("Calendar","Insert event into calendar for reminder", "Google Calendar API client");
+        Component financeWizardComponent = webApp.addComponent( "Wizard for financial operations","Allow in one step to update multiples financial objects e.g. for shoping operation","Django"); 
+        financeWizardComponent.uses(database, "Read / write", "JDBC");
         model.addImplicitRelationships();
+
+        // Views generation
+        ComponentView componentView = views.createComponentView(webApp,"Components","Wep app components diagram.");
+        componentView.setPaperSize(PaperSize.A6_Landscape);
+        componentView.add(authComponent);
+        componentView.add(calendarComponent);
+        componentView.add(financeWizardComponent);
 
         // Documentation
         StructurizrDocumentationTemplate template = new StructurizrDocumentationTemplate(workspace);
