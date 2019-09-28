@@ -6,6 +6,7 @@ import com.structurizr.model.Model;
 import com.structurizr.model.Person;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.model.Tags;
+import com.structurizr.model.Container;
 import com.structurizr.model.Enterprise;
 import com.structurizr.view.*;
 
@@ -36,6 +37,12 @@ public class Structurizr {
         contextView.setPaperSize(PaperSize.A5_Landscape);
         contextView.addAllSoftwareSystems();
         contextView.addAllPeople();
+
+        // C2
+        Container webApp = notesApp.addContainer( "Web app", "Main UI for notes app", "Python");
+        Container database = notesApp.addContainer("Database", "All data for notes", "PostgreSQL");
+        user.uses(webApp, "Uses", ""); 
+        webApp.uses(database, "Read / write", "PEP"); 
 
         // Documentation
         StructurizrDocumentationTemplate template = new StructurizrDocumentationTemplate(workspace);
