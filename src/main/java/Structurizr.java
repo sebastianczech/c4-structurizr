@@ -6,6 +6,7 @@ import com.structurizr.model.Model;
 import com.structurizr.model.Person;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.model.Tags;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Enterprise;
 import com.structurizr.view.*;
@@ -43,6 +44,13 @@ public class Structurizr {
         Container database = notesApp.addContainer("Database", "All data for notes", "PostgreSQL");
         user.uses(webApp, "Uses", ""); 
         webApp.uses(database, "Read / write", "PEP"); 
+
+        // C3
+        Component authController = webApp.addComponent( "Authentication","Allow to authentication access to web app", "Google OAuth client");
+        Component calendarController = webApp.addComponent("Calendar","Insert event into calendar for reminder", "Google Calendar API client");
+        Component financeWizardController = webApp.addComponent( "Wizard for financial operations","Allow in one step to update multiples financial objects e.g. for shoping operation","Django"); 
+        financeWizardController.uses(database, "Read / write", "JDBC");
+        model.addImplicitRelationships();
 
         // Documentation
         StructurizrDocumentationTemplate template = new StructurizrDocumentationTemplate(workspace);
